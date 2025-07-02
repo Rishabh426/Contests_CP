@@ -33,16 +33,39 @@ using namespace std;
 
 void solve()
 {
-    int n, k;
-    cin >> n >> k;
+    int n;
+    cin >> n;
 
-    string s;
-    cin >> s;
+    vi arr(n);
+    for(auto &c : arr) cin >> c;
 
-    int f1 = count(all(s), '1');
+    map<int, int> mpp;
+    floop(i, 0, n) mpp[arr[i]]++;
 
-    if(f1 <= k || n / k <= 1) cout << "Alice" << nl;
-    else cout << "Bob" << nl;  
+    map<int, int> mp;
+    int mex = 0;
+
+    for(auto &[a, b] : mpp) {
+        if(a == mex) {
+            mex++;
+            mp[b]++;
+        }
+    }
+
+    vi ans(n + 1, 0);
+    ans[n] = 1;
+    fnloop(i, n - 1, n - mex + 1) {
+        ans[i] = ans[i + 1] + 1;
+    }
+
+    ans[0] = 1;
+    floop(i, 1, n) {
+        if(ans[i]) break;
+        ans[i] = ans[i - 1] + mp[i];
+    }
+
+    for(auto &c : ans) cout << c << " ";
+    cout << nl;
 
     return;
 }
